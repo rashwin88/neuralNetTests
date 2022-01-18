@@ -7,6 +7,8 @@
 # The input to this helper function will be a list of tuples which will contain parameters of the neural network
 
 import numpy as np
+from nn_activations import relu_activation as relu
+from nn_activations import sigmoid_activation as sigm
 
 def allowable_activations():
     '''
@@ -15,8 +17,8 @@ def allowable_activations():
     '''
     # Forming as a dictionary to store any functions related to these activations
     output ={
-        'relu':{},
-        'sigmoid' : {},
+        'relu':{'forward': relu.forward, 'backward' : relu.backward},
+        'sigmoid' : {'forward': sigm.forward, 'backward' : sigm.backward},
         'input' : {}
     }
     return(output)
