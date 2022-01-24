@@ -34,7 +34,6 @@ def backward(dA, cache):
     # When z <= 0, you should set dz to 0 as well.
     dZ[Z <= 0] = 0
     # Notice that we are using element wise multiplication and not matric multiplications.
-    dZ = dA * s * (1-s)
     assert dZ.shape == Z.shape, 'Issue in backprop with mismatched shape of foo and dfoo'
     return dZ
 
