@@ -64,7 +64,6 @@ def initialize_parameters(input_list):
     A Call is made to create_nn_structure to generate the structure first and then initialize the parameters.
     One idea is to store the values of the parameters in the layer itself, this may be able to act as a useful cache.
     But it may be more useful to create a parameter object to store data.
-    For now, I am choosing the simple string concatentation based structure from Andrew Ng's class
     :param input_list:
     :return: a tuple of structure and initialized parameters for that structure.
     '''
@@ -72,12 +71,14 @@ def initialize_parameters(input_list):
     # creating an empty parameters dictionary
     parameters = {}
     for k,v in structure.get('detailed_structure').items():
+        parameters[k] = {}
         if k == 0:
             # there is nothing to initialize if we are at an input layer
             pass
         else:
-            parameters['W' + str(k)] = np.random.randn(v.get('layer_dimensions'), v.get('prev_layer_dimensions'))*0.01
-            parameters['b' + str(k)] = np.random.randn(v.get('layer_dimensions'), 1)
+            parameters[k] = {}
+            parameters[k]['W'] = np.random.randn(v.get('layer_dimensions'), v.get('prev_layer_dimensions'))*0.01
+            parameters[k]['b'] = np.random.randn(v.get('layer_dimensions'), 1)
     return structure, parameters
 
 

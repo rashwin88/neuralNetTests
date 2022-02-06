@@ -2,6 +2,7 @@
 import numpy as np
 from nn_utils import sanity_tests as st
 from nn_utils import deep_initializers as di
+import copy
 
 # inspired by the assignments in Andrew Ng's course.
 def linear_forward(A_prev, W, b):
@@ -40,4 +41,44 @@ def linear_activation_forward(A_prev, W, b, activation):
     assert st.activation_computation_check(cache['W'], cache['A_prev'], A),\
         "Shape Mismatch between matrices in layer, check dimensions of the weight and activation matrices"
     return A,cache
+
+def multilayer_forward(inputs, parameters, nn_structure):
+    '''
+    Implements multilayer forward propogation upto the last layer
+    :param inputs:
+    :param parameters:
+    :param nn_structure:
+    :return:
+    '''
+    # we first initialize allowable activations
+    activation_dict = di.allowable_activations()
+    # we first create a deep copy of the parameters dictionary
+    fp_stages = copy.deepcopy(parameters)
+    # we then add the input layer directly to the fp_stages dictionary at key 0
+    fp_stages[0]['A'] = inputs
+    # now we simply loop thorugh the various layers with the forward prop
+    layer_count = nn_structure.\
+        get('overall_structure').\
+        get('layer_count_excluding_input_layer')
+    # set the current layer = 1
+    current_layer = 1
+    # begin looping
+    while current_layer<= layer_count:
+        # first perform the linear activation forward
+        fp_stages[current_layer]['A'], fp_stages[current_layer]['cache'] = \
+            linear_activation_forward(
+                A_prev = fp_stages[current_layer - 1].get('A'),
+                W = fp_stages[current_layer]['W'],
+                b = fp_stages[current_layer]['b'],
+                activation= nn_structure.\
+                    get('detailed_structure')[current_layer].\
+                        get('activation')
+            )
+        current_layer+=1
+    return fp_stages
+
+
+
+
+
 
