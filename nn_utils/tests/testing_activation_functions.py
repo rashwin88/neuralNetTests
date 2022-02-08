@@ -6,3 +6,5 @@ g, cache = cm.linear_activation_forward(
     b = np.random.randn(1,1),
     activation = 'sigmoid'
 )
+
+

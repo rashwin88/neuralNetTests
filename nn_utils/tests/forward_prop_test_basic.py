@@ -1,6 +1,6 @@
 from nn_utils import deep_initializers as di
 structure, param = di.initialize_parameters([(100,'input'),
-                                             (1,  'sigmoid')])
+                                             (1,  'sigmoid')], 'cross_entropy')
 
 # forward prop one step
 import numpy as np
@@ -16,3 +16,6 @@ m = cm.multilayer_forward(
     parameters= param,
     nn_structure=structure
 )
+
+n = cm.compute_cost(parameters = m, nn_structure = structure,
+                    actuals = np.random.randn(1,100))

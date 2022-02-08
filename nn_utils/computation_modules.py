@@ -65,7 +65,8 @@ def multilayer_forward(inputs, parameters, nn_structure):
     # begin looping
     while current_layer<= layer_count:
         # first perform the linear activation forward
-        fp_stages[current_layer]['A'], fp_stages[current_layer]['cache'] = \
+        # Storing the cache from the forward pass as forward cache.
+        fp_stages[current_layer]['A'], fp_stages[current_layer]['forward_cache'] = \
             linear_activation_forward(
                 A_prev = fp_stages[current_layer - 1].get('A'),
                 W = fp_stages[current_layer]['W'],
@@ -77,6 +78,35 @@ def multilayer_forward(inputs, parameters, nn_structure):
         current_layer+=1
     return fp_stages
 
+
+def compute_cost(parameters, nn_structure, actuals):
+    '''
+    Computes the cost given the parameter object after a forward pass and
+    the actuals.
+    :param parameters:
+    :param actuals:
+    :param cost_function:
+    :return:
+    '''
+    fp_stages = copy.deepcopy(parameters)
+    fp_stages['cost'] =\
+        nn_structure.\
+        get('overall_structure').\
+        get('cost_function')(
+            # For getting the predictions parameters --> Last Layer --> A
+            predictions = parameters.get(
+                nn_structure.\
+                    get('overall_structure').\
+                    get('layer_count_excluding_input_layer')
+            ).get('A'),
+            # Actuals are fed in as an input
+            # Actuals are technically immutable they are final.
+            actuals = actuals,
+            # Size can be obtained from the shape of A in the parameters.
+            size = parameters.get(0).get('A').shape[1]
+            )
+
+    return fp_stages
 
 
 

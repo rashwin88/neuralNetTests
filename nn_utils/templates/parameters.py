@@ -12,7 +12,9 @@ sample_parameters = {
 
     2: {
         'W' : 'A 50 X 50 NP Array',
-        'b' : 'A 50 X 1 NP Array'
+        'b' : 'A 50 X 1 NP Array',
+        'A' : 'Added after forward Pass',
+        'Forward Cache': {}
     },
 
     3: {

@@ -9,6 +9,21 @@
 import numpy as np
 from nn_activations import relu_activation as relu
 from nn_activations import sigmoid_activation as sigm
+from nn_costs import cross_entropy_loss as cel
+
+
+def allowable_costs():
+    '''
+    :return:
+    Returns a list of allowable costs.
+    '''
+    output = {
+        'cross_entropy' : {'cost_function' : cel.cost_function}
+    }
+
+    return output
+
+
 
 def allowable_activations():
     '''
@@ -23,7 +38,7 @@ def allowable_activations():
     }
     return(output)
 
-def create_nn_structure(input_list):
+def create_nn_structure(input_list, cost_function):
     '''
     Creates a nn structure dictionary
     :param input_list: should contain the input layer also.
@@ -34,6 +49,8 @@ def create_nn_structure(input_list):
     nn_structure_dictionary['overall_structure'] = {}
     nn_structure_dictionary['overall_structure'].update(layer_count_excluding_input_layer = len(input_list) - 1)
     nn_structure_dictionary['overall_structure'].update(features_in_input_layer = input_list[0][0])
+    # This should automatically throw an error if the cost function is not found.
+    nn_structure_dictionary['overall_structure'].update(cost_function = allowable_costs().get(cost_function).get('cost_function'))
     # Defining the actual structure of the deep neural network
     nn_structure_dictionary['detailed_structure'] = {}
     # initialize a layer tracker
@@ -58,7 +75,7 @@ def create_nn_structure(input_list):
             assert v.get('activation') == 'input', 'First layer must have activation set as input'
     return(nn_structure_dictionary)
 
-def initialize_parameters(input_list):
+def initialize_parameters(input_list, cost_function):
     '''
     Here we provide the perviously defined tuple type input for the structure of the neural network.
     A Call is made to create_nn_structure to generate the structure first and then initialize the parameters.
@@ -67,7 +84,7 @@ def initialize_parameters(input_list):
     :param input_list:
     :return: a tuple of structure and initialized parameters for that structure.
     '''
-    structure = create_nn_structure(input_list)
+    structure = create_nn_structure(input_list, cost_function)
     # creating an empty parameters dictionary
     parameters = {}
     for k,v in structure.get('detailed_structure').items():
